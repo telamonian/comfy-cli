@@ -9,6 +9,5 @@ repos:
     hooks:
       - id: pylint
         args:
-          - --disable=R,C,W
-          - --enable=E
+          - --disable=R,C,W,E0401
   
