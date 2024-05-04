@@ -19,7 +19,11 @@ from comfy_cli.command import run as run_inner
 from comfy_cli.command.models import models as models_command
 from comfy_cli.config_manager import ConfigManager
 from comfy_cli.env_checker import EnvChecker, check_comfy_server_running
-from comfy_cli.workspace_manager import WorkspaceManager, check_comfy_repo
+from comfy_cli.workspace_manager import (
+    WorkspaceManager,
+    WorkspaceType,
+    check_comfy_repo,
+)
 
 logging.setup_logging()
 app = typer.Typer()
@@ -331,10 +335,18 @@ def which():
     comfy_path = workspace_manager.workspace_path
     if comfy_path is None:
         print(
-            f"ComfyUI not found, please run 'comfy install', run 'comfy' in a ComfyUI directory, or specify the workspace path with '--workspace'."
+            "ComfyUI not found, please run 'comfy install', run 'comfy' in a ComfyUI directory, or specify the workspace path with '--workspace'."
         )
         raise typer.Exit(code=1)
 
+    if workspace_manager.workspace_type == WorkspaceType.DEFAULT:
+        print("Default Comfy path is used.")
+    elif workspace_manager.workspace_type == WorkspaceType.CURRENT_DIR:
+        print("Current directory is used.")
+    elif workspace_manager.workspace_type == WorkspaceType.RECENT:
+        print("Most recently used ComfyUP is used")
+    elif workspace_manager.workspace_type == WorkspaceType.SPECIFIED:
+        print("Specified path is used.")
     print(f"Target ComfyUI path: {comfy_path}")
 
 
